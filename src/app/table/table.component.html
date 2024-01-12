@@ -1,1 +1,98 @@
-<p>table works!</p>
+<nz-layout class="container">
+  <nz-header>
+    <div nz-row nzJustify="start" nzAlign="middle">
+      <div
+        nz-col
+        nzSpan="12"
+        nz-space
+        nzAlign="center"
+        class="space-align-block"
+      >
+        <nz-select style="min-width: 80px" [(ngModel)]="selectedSearchType">
+          <nz-option nzValue="age" nzLabel="อายุ"></nz-option>
+          <nz-option nzValue="firstName" nzLabel="ชื่อ"></nz-option>
+          <nz-option nzValue="lastName" nzLabel="นามสกุล"></nz-option>
+          <nz-option nzValue="birthday" nzLabel="วันเกิด"></nz-option>
+          <nz-option nzValue="gender" nzLabel="เพศ"></nz-option>
+        </nz-select>
+
+        <nz-divider nzType="vertical"></nz-divider>
+
+        <div>
+          <nz-input-group [nzSuffix]="suffixSearchSearch">
+            <input
+              type="text"
+              nz-input
+              placeholder="ใส่คำค้นหา..."
+              #inputField
+            />
+          </nz-input-group>
+
+          <ng-template #suffixSearchSearch>
+            <span
+              nz-icon
+              nzType="search"
+              (click)="search(inputField.value)"
+            ></span>
+          </ng-template>
+        </div>
+      </div>
+
+      <div nz-col nzSpan="12">&nbsp;</div>
+    </div>
+  </nz-header>
+  <nz-content>
+    <nz-table #guyTable [nzData]="guyList">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>First Name</th>
+          <th>Last Name</th>
+          <th>Age</th>
+          <th>Gender</th>
+          <th>Birthday</th>
+          <th>Created Date</th>
+          <th>Created By</th>
+          <th>Updated Date</th>
+          <th>Updated By</th>
+          <th><a>add</a></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let guy of guyTable.data">
+          <td>{{ guy.id }}</td>
+          <td>{{ guy.firstName }}</td>
+          <td>{{ guy.lastName }}</td>
+          <td>{{ guy.age }}</td>
+          <td>{{ guy.gender }}</td>
+          <td>
+            {{
+              transformDateToBuddhistEraYear(guy.birthday)
+                | date : "dd MMMM yyyy"
+            }}
+          </td>
+          <td>
+            {{
+              transformDateToBuddhistEraYear(guy.createdDate)
+                | date : "dd/MM/yyyy"
+            }}, {{ guy.createdDate | date : "HH:mm" }}
+          </td>
+          <td>{{ guy.createdBy }}</td>
+          <td>
+            {{
+              transformDateToBuddhistEraYear(guy.updatedDate)
+                | date : "dd/MM/yyyy "
+            }}, {{ guy.updatedDate | date : "HH:mm" }}
+          </td>
+          <td>{{ guy.updatedBy }}</td>
+          <td>
+            <a (click)="editGuy(guy)">Edit</a>
+            <nz-divider nzType="vertical"></nz-divider>
+            <a (click)="deleteGuy(guy.id)">Delete</a>
+          </td>
+        </tr>
+      </tbody>
+    </nz-table>
+  </nz-content>
+  <nz-footer></nz-footer>
+</nz-layout>
