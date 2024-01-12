@@ -1,8 +1,6 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Guy } from './guy';
-import { Gender } from './gender.enum';
 
 @Injectable({
   providedIn: 'root',
