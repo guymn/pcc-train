@@ -4,6 +4,7 @@ nz-footer {
   color: unset;
 }
 
-nz-form-item {
-  margin: 10px, 0;
+[nz-form-item] {
+  margin-top: 10px; /* Adjust the value as needed for top margin */
+  margin-bottom: 5px; /* Adjust the value as needed for bottom margin */
 }

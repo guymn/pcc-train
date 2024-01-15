@@ -143,14 +143,28 @@
     <div nz-form-item class="col-12 col-md-6 d-flex">
       <nz-form-label>วันเกิด</nz-form-label>
       <nz-form-control>
-        <input nz-input formControlName="birthday" />
+        <input nz-input formControlName="birthday" type="date" />
       </nz-form-control>
     </div>
 
     <div nz-form-item class="col-12 col-md-6 d-flex">
       <nz-form-label>อายุ</nz-form-label>
       <nz-form-control>
-        <input nz-input formControlName="age" />
+        <input
+          nz-input
+          [disabled]="true"
+          placeholder="{{ guyForm.value.age }}"
+        />
+      </nz-form-control>
+    </div>
+
+    <div nz-form-item class="col-12 col-md-6 d-flex">
+      <nz-form-label>เพศ</nz-form-label>
+      <nz-form-control>
+        <nz-select formControlName="gender">
+          <nz-option nzLabel="ชาย" nzValue="ชาย"></nz-option>
+          <nz-option nzLabel="หญิง" nzValue="หญิง"></nz-option>
+        </nz-select>
       </nz-form-control>
     </div>
   </form>
