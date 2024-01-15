@@ -13,4 +13,10 @@ export class TableService {
     const urlWithParams = `${this.url}/find/jdbc?${aparamsToSearch}`;
     return this.httpClient.get<any[]>(urlWithParams);
   }
+
+  deleteData(id: any) {
+    const url = `${this.url}/delete`;
+    const params = new HttpParams().set('id', id);
+    return this.httpClient.delete(url, { params });
+  }
 }

@@ -23,7 +23,7 @@ export class TableComponent implements OnInit {
     lastName: ['', Validators.required],
     age: [0, Validators.required],
     gender: ['ชาย', Validators.required],
-    birthday: [null, Validators.required],
+    birthday: [new Date(), Validators.required],
     createdBy: ['', Validators.required],
     updatedBy: ['', Validators.required],
   });
@@ -44,8 +44,13 @@ export class TableComponent implements OnInit {
     console.log(guy);
   }
 
-  deleteGuy(index: number) {
-    console.log(index);
+  deleteGuy(id: number) {
+    if (!confirm(`ต้องการลบข้อมูลชึดที่ ${id} ใช่หรือไม่`)) {
+      return;
+    }
+    this.tableService.deleteData(id).subscribe(() => {
+      this.fetchData();
+    });
   }
 
   transformDateToBuddhistEraYear(date: Date): string {
