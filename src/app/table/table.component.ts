@@ -68,7 +68,7 @@ export class TableComponent implements OnInit {
     };
 
     if (!guyObject.id) {
-      guyObject.createdBy = guyObject.firstName();
+      guyObject.createdBy = guyObject.firstName;
     }
 
     return this.tableService.postData(guyObject).subscribe(() => {
