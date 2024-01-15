@@ -17,31 +17,33 @@ export class TableComponent implements OnInit {
   isModalVisible = false;
   isModalLoading = false;
   modalTitle: string = '';
-  guyForm: FormGroup = this.fb.group({
-    id: [null, Validators.required],
-    firstName: ['', Validators.required],
-    lastName: ['', Validators.required],
-    age: [0, Validators.required],
-    gender: ['ชาย', Validators.required],
-    birthday: [new Date(), Validators.required],
-    createdBy: ['', Validators.required],
-    updatedBy: ['', Validators.required],
-  });
+  guyForm: FormGroup = this.fb.group({});
+  selectedBirthday: Date | null | undefined;
 
   constructor(private tableService: TableService, private fb: FormBuilder) {}
 
   ngOnInit(): void {
     this.fetchData();
+    this.setDefultGuyForm();
+  }
+
+  setDefultGuyForm() {
+    this.guyForm = this.fb.group({
+      id: [null],
+      firstName: ['', Validators.required],
+      lastName: ['', Validators.required],
+      age: [0, Validators.required],
+      gender: ['ชาย', Validators.required],
+      birthday: [null, Validators.required],
+      createdBy: [''],
+      updatedBy: ['guy', Validators.required],
+    });
   }
 
   fetchData(): void {
     this.tableService.getData(this.paramsToSearch).subscribe((response) => {
       this.guyList = response;
     });
-  }
-
-  editGuy(guy: Guy) {
-    console.log(guy);
   }
 
   deleteGuy(id: number) {
@@ -53,10 +55,44 @@ export class TableComponent implements OnInit {
     });
   }
 
+  postGuy(callback: () => void) {
+    const guyObject = {
+      id: this.guyForm.get('id')?.value,
+      firstName: this.guyForm.get('firstName')?.value,
+      lastName: this.guyForm.get('lastName')?.value,
+      age: this.guyForm.get('age')?.value,
+      gender: this.guyForm.get('gender')?.value,
+      birthday: this.formatDateToddMMyyy(this.guyForm.get('birthday')?.value),
+      createdBy: this.guyForm.get('createdBy')?.value,
+      updatedBy: this.guyForm.get('firstName')?.value,
+    };
+
+    if (!guyObject.id) {
+      guyObject.createdBy = guyObject.firstName();
+    }
+
+    return this.tableService.postData(guyObject).subscribe(() => {
+      callback();
+      this.ngOnInit();
+    });
+  }
+
   transformDateToBuddhistEraYear(date: Date): string {
     const adjustedDate = new Date(date);
+    adjustedDate.setDate(adjustedDate.getDate() + 1);
     adjustedDate.setFullYear(adjustedDate.getFullYear() + 543);
     return adjustedDate.toISOString().split('T')[0];
+  }
+
+  formatDateToddMMyyy(date: Date): string {
+    const adjustedDate = new Date(date);
+    adjustedDate.setFullYear(adjustedDate.getFullYear() + 543);
+
+    const day = adjustedDate.getDate().toString().padStart(2, '0');
+    const month = (adjustedDate.getMonth() + 1).toString().padStart(2, '0'); // Month is zero-based
+    const year = adjustedDate.getFullYear();
+
+    return `${day}/${month}/${year}`;
   }
 
   search(input: string) {
@@ -67,22 +103,70 @@ export class TableComponent implements OnInit {
   //showModal
   addGuy() {
     this.isModalVisible = true;
-    this.modalTitle = 'Add guy data';
+    this.modalTitle = 'เพิ่มข้อมูล';
+  }
+
+  editGuy(guy: Guy) {
+    this.guyForm = this.fb.group({
+      id: [guy.id],
+      firstName: [guy.firstName, Validators.required],
+      lastName: [guy.lastName, Validators.required],
+      age: [guy.age, Validators.required],
+      gender: [guy.gender, Validators.required],
+      birthday: [guy.birthday, Validators.required],
+      createdBy: [guy.createdBy],
+      updatedBy: [guy.updatedBy, Validators.required],
+    });
+
+    this.isModalVisible = true;
+    this.modalTitle = 'แก้ใขข้อมูลลำดับที่  ' + guy.id;
+  }
+
+  onChangeBirthday(event: Date) {
+    this.calcurateAge();
+  }
+
+  closeModal() {
+    this.isModalVisible = false;
+    this.isModalLoading = false;
   }
 
   handleOk(): void {
-    console.log(this.guyForm.value);
     if (!this.guyForm.valid) {
+      Object.values(this.guyForm.controls).forEach((control) => {
+        if (control.invalid) {
+          control.markAsDirty();
+          control.updateValueAndValidity({ onlySelf: true });
+        }
+      });
       return;
     }
     this.isModalLoading = true;
-    setTimeout(() => {
-      this.isModalVisible = false;
-      this.isModalLoading = false;
-    }, 3000);
+
+    this.postGuy(() => {
+      this.closeModal();
+      this.setDefultGuyForm();
+    });
   }
 
   handleCancel(): void {
-    this.isModalVisible = false;
+    this.closeModal();
+  }
+
+  calcurateAge() {
+    const birthdayControl = this.guyForm.get('birthday');
+    const ageControl = this.guyForm.get('age');
+
+    if (birthdayControl && ageControl) {
+      const birthdate = birthdayControl.value;
+
+      if (birthdate) {
+        const today = new Date();
+        const birthDate = new Date(birthdate);
+        let age = today.getFullYear() - birthDate.getFullYear();
+
+        ageControl.setValue(age);
+      }
+    }
   }
 }

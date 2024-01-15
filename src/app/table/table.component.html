@@ -125,47 +125,52 @@
   (nzOnOk)="handleOk()"
   [nzOkLoading]="isModalLoading"
 >
-  <form [formGroup]="guyForm" class="row justify-content-between">
-    <div nz-form-item class="col-12 col-md-6 d-flex">
-      <nz-form-label>ชื่อ</nz-form-label>
-      <nz-form-control>
-        <input nz-input formControlName="firstName" />
-      </nz-form-control>
-    </div>
+  <ng-template nzModalContent>
+    <form [formGroup]="guyForm" class="row justify-content-between">
+      <div nz-form-item class="col-12 col-md-6 d-flex">
+        <nz-form-label>ชื่อ</nz-form-label>
+        <nz-form-control nzErrorTip="กรุณาใส่ชื่อ">
+          <input nz-input formControlName="firstName" />
+        </nz-form-control>
+      </div>
 
-    <div nz-form-item class="col-12 col-md-6 d-flex">
-      <nz-form-label>นามสกุล</nz-form-label>
-      <nz-form-control>
-        <input nz-input formControlName="lastName" />
-      </nz-form-control>
-    </div>
+      <div nz-form-item class="col-12 col-md-6 d-flex">
+        <nz-form-label>นามสกุล</nz-form-label>
+        <nz-form-control nzErrorTip="กรุณาใส่นามสกุล">
+          <input nz-input formControlName="lastName" />
+        </nz-form-control>
+      </div>
 
-    <div nz-form-item class="col-12 col-md-6 d-flex">
-      <nz-form-label>วันเกิด</nz-form-label>
-      <nz-form-control>
-        <input nz-input formControlName="birthday" type="date" />
-      </nz-form-control>
-    </div>
+      <div nz-form-item class="col-12 col-md-6 d-flex">
+        <nz-form-label>วันเกิด</nz-form-label>
+        <nz-form-control nzErrorTip="กรุณาใส่วันเกิด">
+          <nz-date-picker
+            nzFormat="dd/MM/yyyy"
+            formControlName="birthday"
+            (ngModelChange)="onChangeBirthday($event)"
+          ></nz-date-picker>
+        </nz-form-control>
+      </div>
 
-    <div nz-form-item class="col-12 col-md-6 d-flex">
-      <nz-form-label>อายุ</nz-form-label>
-      <nz-form-control>
-        <input
-          nz-input
-          [disabled]="true"
-          placeholder="{{ guyForm.value.age }}"
-        />
-      </nz-form-control>
-    </div>
+      <div nz-form-item class="col-12 col-md-6 d-flex">
+        <nz-form-label>อายุ</nz-form-label>
+        <nz-form-control>
+          <input
+            nz-input
+            [disabled]="true"
+            placeholder="{{ guyForm.value.age }}"
+          />
+        </nz-form-control>
+      </div>
 
-    <div nz-form-item class="col-12 col-md-6 d-flex">
-      <nz-form-label>เพศ</nz-form-label>
-      <nz-form-control>
-        <nz-select formControlName="gender">
-          <nz-option nzLabel="ชาย" nzValue="ชาย"></nz-option>
-          <nz-option nzLabel="หญิง" nzValue="หญิง"></nz-option>
-        </nz-select>
-      </nz-form-control>
-    </div>
-  </form>
+      <div nz-form-item class="col-12 col-md-6 d-flex">
+        <nz-form-label>เพศ</nz-form-label>
+        <nz-form-control>
+          <nz-select formControlName="gender">
+            <nz-option nzLabel="ชาย" nzValue="ชาย"></nz-option>
+            <nz-option nzLabel="หญิง" nzValue="หญิง"></nz-option>
+          </nz-select>
+        </nz-form-control>
+      </div></form
+  ></ng-template>
 </nz-modal>

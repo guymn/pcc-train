@@ -1,6 +1,7 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { Guy } from './guy';
 
 @Injectable({
   providedIn: 'root',
@@ -14,9 +15,14 @@ export class TableService {
     return this.httpClient.get<any[]>(urlWithParams);
   }
 
-  deleteData(id: any) {
+  deleteData(id: any): Observable<any> {
     const url = `${this.url}/delete`;
     const params = new HttpParams().set('id', id);
     return this.httpClient.delete(url, { params });
+  }
+
+  postData(body: Object): Observable<any> {
+    const url = `${this.url}/save`;
+    return this.httpClient.post(url, body);
   }
 }
