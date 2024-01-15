@@ -146,6 +146,7 @@
         <nz-form-control nzErrorTip="กรุณาใส่วันเกิด">
           <nz-date-picker
             nzFormat="dd/MM/yyyy"
+            [nzDisabledDate]="disabledDate"
             formControlName="birthday"
             (ngModelChange)="onChangeBirthday($event)"
           ></nz-date-picker>

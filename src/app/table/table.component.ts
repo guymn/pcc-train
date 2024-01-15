@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Guy } from '../guy';
 import { TableService } from '../table.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { differenceInCalendarDays } from 'date-fns';
 
 @Component({
   selector: 'app-table',
@@ -26,6 +27,10 @@ export class TableComponent implements OnInit {
     this.fetchData();
     this.setDefultGuyForm();
   }
+
+  disabledDate = (current: Date): boolean =>
+    // Can not select days before today and today
+    differenceInCalendarDays(current, new Date()) > 0;
 
   setDefultGuyForm() {
     this.guyForm = this.fb.group({
